@@ -279,7 +279,7 @@ __global__ void k_attn_prep(const float* qg, const float* kx, const float* vx, c
     const int half = n_rot / 2;
     if (i < n_rot) {
         const int p = i < half ? i : i - half;
-        const int rp = mtab ? __ldg(mtab + (size_t) pos * 3 + p % 3) : pos + dl;
+        const int rp = mtab ? mtab[(size_t) pos * 3 + p % 3] : pos + dl;
         const float theta = (float) rp * powf(base, -2.0f * (float) p / (float) n_rot);
         float sn, cs;
         sincosf(theta, &sn, &cs);
@@ -1656,7 +1656,7 @@ struct Engine {
                     std::memcpy(&ds_b, &b[o], 4);
                     std::fprintf(stderr, "VDEBUG block %zu: ds new %08x old %08x, qs bytes %s, cpu butterfly sum %.9g (half %04x)\n",
                                  blk, ds_a, ds_b, std::memcmp(&a[o + 4], &b[o + 4], 32) == 0 ? "equal" : "DIFFER", (double) t[0],
-                                 (unsigned) __half_as_ushort(__float2half(t[0])));
+                                 (unsigned) [](float f){ unsigned short u; __half h = __float2half(f); __builtin_memcpy(&u, &h, 2); return u; }(t[0]));
                     break;
                 }
         }

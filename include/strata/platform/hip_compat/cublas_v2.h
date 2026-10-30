@@ -24,3 +24,5 @@
 #define CUBLAS_DEFAULT_MATH 0
 #define cublasSetMathMode(handle, mode) HIPBLAS_STATUS_SUCCESS
 #define cublasSetWorkspace(handle, ptr, bytes) HIPBLAS_STATUS_SUCCESS
+#define cublasSgemm hipblasSgemm
+#define cublasGemmStridedBatchedEx hipblasGemmStridedBatchedEx
